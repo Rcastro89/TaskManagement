@@ -28,7 +28,7 @@ export const CreateUserTaskProvider = ({ children }) => {
             await api.post('/UserTask/create', assignment);
         } catch (err) {
             if (err.response && err.response.status === 403) {
-                throw new Error('No tiene permisos suficientes para realizar esta acción, comuníquese con su administrador');
+                throw new Error('No tiene permisos suficientes para realizar esta acciÃ³n, comunÃ­quese con su administrador');
             } else {
                 throw new Error('Error al asignar la tarea: ' + err.response.data);
             }

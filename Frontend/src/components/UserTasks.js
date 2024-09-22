@@ -1,17 +1,48 @@
 import React, { useContext, useState } from 'react';
 import { UserTaskContext } from '../context/UserTaskContext';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Button, Box } from '@mui/material';
-import { Add } from '@mui/icons-material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Button, Box, MenuItem, TextField } from '@mui/material';
+import { Add, Edit, Save, Close } from '@mui/icons-material';
 import AssignTask from './CreateUserTask';
 
 const UserTasks = () => {
-    const { userTasks, loading, error, fetchTasks } = useContext(UserTaskContext);
+    const { userTasks, loading, error, fetchTasks, updateUserTaskStatus } = useContext(UserTaskContext);
     const [open, setOpen] = useState(false);
+    const [editingTask, setEditingTask] = useState(null);
+    const [newStatus, setNewStatus] = useState('');
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
         setOpen(false);
-        fetchTasks(); 
+        fetchTasks();
+    };
+
+    const handleEdit = (task) => {
+        setEditingTask(task);
+        setNewStatus(task.status);
+    };
+
+    const handleSave = async () => {
+        if (editingTask) {
+            const updateTask = {
+                IdUserTask: editingTask.idUserTask,
+                Status: newStatus
+            }
+
+            try {
+                await updateUserTaskStatus(updateTask);
+            }
+            catch (err) {
+                alert('Error al actualizar el estatus: ' + err);
+            }
+
+            setEditingTask(null); 
+            fetchTasks(); 
+        }
+    };
+
+    const handleCancel = () => {
+        setEditingTask(null); 
+        setNewStatus("");
     };
 
     if (loading) {
@@ -38,10 +69,11 @@ const UserTasks = () => {
                 <Table>
                     <TableHead>
                         <TableRow>
-                            <TableCell>ID</TableCell>
-                            <TableCell>Usuario</TableCell>
-                            <TableCell>Tarea</TableCell>
-                            <TableCell>Estatus</TableCell>
+                            <TableCell style={{ width: '50px' }}>ID</TableCell>
+                            <TableCell style={{ width: '50px' }}>Usuario</TableCell>
+                            <TableCell style={{ width: '50px' }}>Tarea</TableCell>
+                            <TableCell style={{ width: '50px' }}>Estatus</TableCell>
+                            <TableCell style={{ width: '50px' }}>Acciones</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -50,7 +82,52 @@ const UserTasks = () => {
                                 <TableCell>{userTask.idUserTask}</TableCell>
                                 <TableCell>{userTask.userName}</TableCell>
                                 <TableCell>{userTask.title}</TableCell>
-                                <TableCell>{userTask.status}</TableCell>
+                                <TableCell>
+                                    {editingTask?.idUserTask === userTask.idUserTask ? (
+                                        <TextField
+                                            select
+                                            value={newStatus}
+                                            onChange={(e) => setNewStatus(e.target.value)}
+                                            variant="outlined"
+                                            size="small"
+                                        >
+                                            <MenuItem value="Pendiente">Pendiente</MenuItem>
+                                            <MenuItem value="En Proceso">En Proceso</MenuItem>
+                                            <MenuItem value="Completada">Completada</MenuItem>
+                                        </TextField>
+                                    ) : (
+                                        userTask.status
+                                    )}
+                                </TableCell>
+                                <TableCell>
+                                    {editingTask?.idUserTask === userTask.idUserTask ? (
+                                        <Box>
+                                            <Button
+                                                onClick={handleSave}
+                                                color="primary"
+                                                startIcon={<Save />}
+                                            >
+                                                Guardar
+                                            </Button>
+                                            <Button
+                                                onClick={() => handleCancel()}
+                                                color="secondary"
+                                                startIcon={<Close />}
+                                                sx={{ marginLeft: 1 }} // Espacio entre botones
+                                            >
+                                                Cancelar
+                                            </Button>
+                                        </Box>
+                                    ) : (
+                                        <Button
+                                            onClick={() => handleEdit(userTask)}
+                                            color="secondary"
+                                            startIcon={<Edit />}
+                                        >
+                                            Editar
+                                        </Button>
+                                    )}
+                                </TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
@@ -59,7 +136,6 @@ const UserTasks = () => {
             <AssignTask open={open} onClose={handleClose} />
         </Box>
     );
-
 };
 
 export default UserTasks;

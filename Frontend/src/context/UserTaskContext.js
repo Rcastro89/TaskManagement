@@ -29,12 +29,20 @@ export const UserTaskProvider = ({ children }) => {
         }
     };
 
+    const updateUserTaskStatus = async (updateTask) => {
+        try {
+            const response = await api.post('/UserTask/updateStatus', updateTask);
+        } catch (err) {
+            throw new Error('Error al editar la tarea del usuario: ' + err.response.data);
+        }
+    };
+
     useEffect(() => {
         fetchTasks();
     }, [token]);
 
     return (
-        <UserTaskContext.Provider value={{ userTasks, loading, error, fetchTasks }}>
+        <UserTaskContext.Provider value={{ userTasks, loading, error, fetchTasks, updateUserTaskStatus }}>
             {children}
         </UserTaskContext.Provider>
     );
