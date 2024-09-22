@@ -1,10 +1,18 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { UserTaskContext } from '../context/UserTaskContext';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Button, Box } from '@mui/material';
 import { Add } from '@mui/icons-material';
+import AssignTask from './CreateUserTask';
 
 const UserTasks = () => {
-    const { userTasks, loading, error } = useContext(UserTaskContext);
+    const { userTasks, loading, error, fetchTasks } = useContext(UserTaskContext);
+    const [open, setOpen] = useState(false);
+
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => {
+        setOpen(false);
+        fetchTasks(); 
+    };
 
     if (loading) {
         return <CircularProgress />;
@@ -21,7 +29,7 @@ const UserTasks = () => {
             </Typography>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 2 }}>
-                <Button variant="contained" color="primary" startIcon={<Add />} >
+                <Button variant="contained" color="primary" startIcon={<Add />} onClick={handleOpen}>
                     Asignar Nueva Tarea
                 </Button>
             </Box>
@@ -48,6 +56,7 @@ const UserTasks = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
+            <AssignTask open={open} onClose={handleClose} />
         </Box>
     );
 

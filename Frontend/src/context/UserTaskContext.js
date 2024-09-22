@@ -34,7 +34,7 @@ export const UserTaskProvider = ({ children }) => {
     }, [token]);
 
     return (
-        <UserTaskContext.Provider value={{ userTasks, loading, error }}>
+        <UserTaskContext.Provider value={{ userTasks, loading, error, fetchTasks }}>
             {children}
         </UserTaskContext.Provider>
     );

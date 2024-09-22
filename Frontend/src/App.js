@@ -7,6 +7,7 @@ import PrivateRoute from './components/PrivateRoute';
 import UserTasks from './components/UserTasks';
 import { UserTaskProvider } from './context/UserTaskContext';
 import { AuthContext, AuthProvider } from './context/AuthContext'; // Importa AuthContext
+import { CreateUserTaskProvider } from './context/CreateUserTaskContext';
 
 import './App.css';
 
@@ -14,22 +15,24 @@ const App = () => {
     return (
         <AuthProvider>
             <UserTaskProvider>
-                <Router>
-                    <div className="app-container">
-                        <Header />
-                        <div className="content">
-                            <Routes>
-                                <Route path="/" element={<LoginOrRedirect />} /> {/* Nuevo componente */}
-                                <Route path="/UserTasks" element={
-                                    <PrivateRoute>
-                                        <UserTasks />
-                                    </PrivateRoute>
-                                } />
-                            </Routes>
+                <CreateUserTaskProvider>
+                    <Router>
+                        <div className="app-container">
+                            <Header />
+                            <div className="content">
+                                <Routes>
+                                    <Route path="/" element={<LoginOrRedirect />} /> {/* Nuevo componente */}
+                                    <Route path="/UserTasks" element={
+                                        <PrivateRoute>
+                                            <UserTasks />
+                                        </PrivateRoute>
+                                    } />
+                                </Routes>
+                            </div>
+                            <Footer />
                         </div>
-                        <Footer />
-                    </div>
-                </Router>
+                    </Router>
+                </CreateUserTaskProvider>
             </UserTaskProvider>
         </AuthProvider>
     );
