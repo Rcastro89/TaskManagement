@@ -35,7 +35,7 @@ const Login = () => {
             </Typography>
             <form onSubmit={handleSubmit} style={{ width: '300px' }}>
                 <TextField
-                    label="User Name"
+                    label="Usuario"
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
                     required
@@ -43,7 +43,7 @@ const Login = () => {
                     margin="normal"
                 />
                 <TextField
-                    label="Password"
+                    label="Contraseña"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}

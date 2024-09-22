@@ -3,7 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, 
 import { Autocomplete } from '@mui/lab';
 import { CreateUserTaskContext } from '../context/CreateUserTaskContext';
 
-const AssignTask = ({ open, onClose }) => {
+const CreateUserTask = ({ open, onClose }) => {
     const { tasks, users, createUserTask, error } = useContext(CreateUserTaskContext);
     const [selectedTask, setSelectedTask] = useState(null);
     const [selectedUser, setSelectedUser] = useState(null);
@@ -67,4 +67,4 @@ const AssignTask = ({ open, onClose }) => {
     );
 };
 
-export default AssignTask;
+export default CreateUserTask;

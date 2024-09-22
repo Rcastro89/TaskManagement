@@ -10,6 +10,8 @@ import { AuthContext, AuthProvider } from './context/AuthContext';
 import { CreateUserTaskProvider } from './context/CreateUserTaskContext';
 import Users from './components/Users';
 import { UserProvider } from './context/UserContext';
+import { CreateUserProvider } from './context/CreateUserContext';
+
 
 
 import './App.css';
@@ -19,28 +21,30 @@ const App = () => {
         <AuthProvider>
             <UserTaskProvider>
                 <CreateUserTaskProvider>
-                <UserProvider>
-                        <Router>
-                            <div className="app-container">
-                                <Header />
-                                <div className="content">
-                                    <Routes>
-                                        <Route path="/" element={<LoginOrRedirect />} /> {/* Nuevo componente */}
-                                        <Route path="/UserTasks" element={
-                                            <PrivateRoute>
-                                                <UserTasks />
-                                            </PrivateRoute>
-                                        } />
-                                        <Route path="/Users" element={
-                                            <PrivateRoute>
-                                                <Users />
-                                            </PrivateRoute>
-                                        } />
-                                    </Routes>
+                    <UserProvider>
+                        <CreateUserProvider>
+                            <Router>
+                                <div className="app-container">
+                                    <Header />
+                                    <div className="content">
+                                        <Routes>
+                                            <Route path="/" element={<LoginOrRedirect />} /> {/* Nuevo componente */}
+                                            <Route path="/UserTasks" element={
+                                                <PrivateRoute>
+                                                    <UserTasks />
+                                                </PrivateRoute>
+                                            } />
+                                            <Route path="/Users" element={
+                                                <PrivateRoute>
+                                                    <Users />
+                                                </PrivateRoute>
+                                            } />
+                                        </Routes>
+                                    </div>
+                                    <Footer />
                                 </div>
-                                <Footer />
-                            </div>
-                        </Router>
+                            </Router>
+                        </CreateUserProvider>
                     </UserProvider>
                 </CreateUserTaskProvider>
             </UserTaskProvider>

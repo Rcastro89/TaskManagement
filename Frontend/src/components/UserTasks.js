@@ -2,13 +2,16 @@ import React, { useContext, useState, useEffect } from 'react';
 import { UserTaskContext } from '../context/UserTaskContext';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Button, Box, MenuItem, TextField } from '@mui/material';
 import { Add, Edit, Save, Close } from '@mui/icons-material';
-import AssignTask from './CreateUserTask';
+import CreateUserTask from './CreateUserTask';
 
 const UserTasks = () => {
     const { userTasks, loading, error, fetchTasks, updateUserTaskStatus } = useContext(UserTaskContext);
     const [open, setOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const [newStatus, setNewStatus] = useState('');
+    const headerStyle = (width) => {
+        return { fontWeight: 'bold', width: width }
+    };
 
     const handleOpen = () => setOpen(true);
     const handleClose = () => {
@@ -72,12 +75,12 @@ const UserTasks = () => {
             <TableContainer>
                 <Table>
                     <TableHead>
-                        <TableRow>
-                            <TableCell style={{ width: '50px' }}>ID</TableCell>
-                            <TableCell style={{ width: '50px' }}>Usuario</TableCell>
-                            <TableCell style={{ width: '50px' }}>Tarea</TableCell>
-                            <TableCell style={{ width: '50px' }}>Estatus</TableCell>
-                            <TableCell style={{ width: '50px' }}>Acciones</TableCell>
+                        <TableRow style={{ backgroundColor: 'lightgrey' }}>
+                            <TableCell style={headerStyle(20)}>ID</TableCell>
+                            <TableCell style={headerStyle(150)}>Usuario</TableCell>
+                            <TableCell style={headerStyle(150)}>Tarea</TableCell>
+                            <TableCell style={headerStyle(150)}>Estatus</TableCell>
+                            <TableCell style={headerStyle(150)}>Acciones</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -137,7 +140,7 @@ const UserTasks = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-            <AssignTask open={open} onClose={handleClose} />
+            <CreateUserTask open={open} onClose={handleClose} />
         </Box>
     );
 };

@@ -46,6 +46,8 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
 builder.Services.AddScoped<IUserTaskService, UserTaskService>();
+builder.Services.AddScoped<IRolesService, RolesService>();
+
 builder.Services.AddScoped<PasswordService>();
 
 
