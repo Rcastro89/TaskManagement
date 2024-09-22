@@ -1,9 +1,13 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { UserContext } from '../context/UserContext';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Box } from '@mui/material';
 
 const Users = () => {
-    const { users, loading, error } = useContext(UserContext);
+    const { users, loading, error, fetchUsers } = useContext(UserContext);
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
 
     if (loading) {
         return <CircularProgress />;

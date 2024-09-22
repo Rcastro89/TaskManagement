@@ -20,12 +20,9 @@ export const UserProvider = ({ children }) => {
         }
     };
 
-    useEffect(() => {
-        fetchUsers();
-    }, []);
 
     return (
-        <UserContext.Provider value={{ users, loading, error }}>
+        <UserContext.Provider value={{ users, loading, error, fetchUsers }}>
             {children}
         </UserContext.Provider>
     );

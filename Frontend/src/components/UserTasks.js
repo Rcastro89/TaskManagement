@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { UserTaskContext } from '../context/UserTaskContext';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Button, Box, MenuItem, TextField } from '@mui/material';
 import { Add, Edit, Save, Close } from '@mui/icons-material';
@@ -44,6 +44,10 @@ const UserTasks = () => {
         setEditingTask(null); 
         setNewStatus("");
     };
+
+    useEffect(() => {
+        fetchTasks();
+    }, []);
 
     if (loading) {
         return <CircularProgress />;
