@@ -1,0 +1,160 @@
+﻿using Microsoft.IdentityModel.Tokens;
+using System.Collections.Generic;
+using System.Data;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
+using TaskManagementAPI.DTOs;
+using TaskManagementAPI.Models;
+using TaskManagementAPI.Services;
+
+public class UserService : IUserService
+{
+    private readonly IGenericRepository<Usuario> _userRepository;
+    private readonly IGenericRepository<Role> _roleRepository;
+    private readonly IConfiguration _configuration;
+    private readonly PasswordService _passwordServices;
+
+    public UserService(IGenericRepository<Usuario> userRepository, IConfiguration configuration, PasswordService passwordServices, IGenericRepository<Role> roleRepository)
+    {
+        _userRepository = userRepository;
+        _configuration = configuration;
+        _passwordServices = passwordServices;
+        _roleRepository = roleRepository;
+    }
+
+    public async Task<IEnumerable<Usuario>> GetAllUsersAsync()
+    {
+        return await _userRepository.GetAllAsync();
+    }
+
+    public async Task<Usuario> GetUserByIdAsync(int id)
+    {
+        return await _userRepository.GetByIdAsync(id);
+    }
+
+    public async Task AddUserAsync(UserDto userDto)
+    {
+        await ValidateNameAndRoleAsync(userDto);
+
+        var user = new Usuario
+        {
+            UserName = userDto.UserName,
+            PasswordHash = _passwordServices.HashPassword(userDto.PasswordHash),
+            IdRole = userDto.IdRole
+        };
+
+        await _userRepository.AddAsync(user);
+    }
+
+    public async Task UpdateUserAsync(UserDto userDto)
+    {
+        await ValidateNameAndRoleAsync(userDto);
+
+        var existingUser = await _userRepository.GetByIdAsync(userDto.IdUser.Value);
+
+        if (existingUser == null)
+        {
+            throw new Exception("Usuario no encontrado");
+        }
+
+        existingUser.UserName = userDto.UserName;
+        existingUser.IdRole = userDto.IdRole;
+
+        await _userRepository.UpdateAsync(existingUser);
+    }
+
+    public async Task DeleteUserAsync(int id)
+    {
+        await _userRepository.DeleteAsync(id);
+    }
+
+    public async Task UpdateUserPasswordAsync(int id, string newPassword)
+    {
+        var user = await _userRepository.GetByIdAsync(id);
+
+        if (user == null)
+        {
+            throw new Exception("Usuario no encontrado");
+        }
+
+        user.PasswordHash = _passwordServices.HashPassword(newPassword);
+
+        await _userRepository.UpdateAsync(user);
+    }
+
+    public async Task<string> Authenticate(LoginDto login)
+    {
+        SecurityToken? token = null;
+        var users = await _userRepository.GetAllAsync();
+
+        var user = users.FirstOrDefault(u => u.UserName == login.Username);
+
+        if (user == null || !_passwordServices.VerifyPassword(user.PasswordHash, login.Password))
+        {
+            return "Error: Usuario o contraseña incorrecta";
+        }
+
+        var role = user.IdRole.HasValue ? (await _roleRepository.GetByIdAsync(user.IdRole.Value))?.RoleName : null;
+
+        if (role == null)
+        {
+            return "Error: El usuario no tiene un rol válido.";
+        }
+
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+
+        var claims = new List<Claim>
+        {
+            new Claim("id", user.IdUser.ToString()),
+            new Claim(ClaimTypes.Role, role)
+        };
+
+        var tokenDescriptor = new SecurityTokenDescriptor
+        {
+            Subject = new ClaimsIdentity(claims),
+            Expires = DateTime.UtcNow.AddMinutes(Convert.ToDouble(_configuration["Jwt:DurationInMinutes"])),
+            SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+            Audience = _configuration["Jwt:Audience"],
+            Issuer = _configuration["Jwt:Issuer"]
+        };
+        try
+        {
+            token = tokenHandler.CreateToken(tokenDescriptor);
+        }
+        catch (Exception ex) 
+        {
+            return $"Failure: {ex.Message}";
+        }
+
+        return tokenHandler.WriteToken(token);
+    }
+
+    private async Task ValidateNameAndRoleAsync(UserDto userDto)
+    {
+        var role = await _roleRepository.GetByIdAsync(userDto.IdRole);
+        if (role == null)
+        {
+            throw new Exception("Rol inválido");
+        }
+
+        var existingUsers = await _userRepository.GetAllAsync();
+
+        if (!userDto.IdUser.HasValue)
+        {
+            if (existingUsers.Any(u => u.UserName == userDto.UserName))
+            {
+                throw new Exception("Error: No es posible crear el usuario (El nombre de usuario ya está en uso. Por favor, elige otro.)");
+            }
+        }
+        else
+        {
+            if (existingUsers.Any(u => u.UserName == userDto.UserName && u.IdUser != userDto.IdUser))
+            {
+                throw new Exception("Error: No es posible actualizar el nombre del usuario (El nombre de usuario ya está en uso. Por favor, elige otro.)");
+            }
+        }
+    }
+}
