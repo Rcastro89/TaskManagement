@@ -1,68 +1,73 @@
 import React, { useContext, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { TextField, Button, Typography, Container } from '@mui/material';
 import { AuthContext } from '../context/AuthContext';
-import '../styles/loginStyle.css';
+import { useNavigate } from 'react-router-dom';
+import { TextField, Button, Typography, Box, CircularProgress } from '@mui/material';
 
 const Login = () => {
-    const navigate = useNavigate();
-    const { login } = useContext(AuthContext);
+    const { login, error } = useContext(AuthContext);
     const [userName, setUserName] = useState('');
     const [password, setPassword] = useState('');
-    const [error, setError] = useState('');
-    const [errorMessage, setErrorMessage] = useState('');
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrorMessage('');
         setLoading(true);
         try {
             await login(userName, password);
-            navigate('/prueba');
-        } catch (error) {
-            console.log(error);
-
-            setErrorMessage(error.response ? error.response.data : 'Error al iniciar sesión');
-            console.error('Error al iniciar sesión:', errorMessage);
+            navigate('/UserTasks'); // Redirige a la página de tareas después del login
         } finally {
             setLoading(false);
         }
     };
 
     return (
-        <Container component="main" maxWidth="xs" className="loginFmr">
-            <Typography variant="h5">Iniciar Sesión</Typography>
-            <form onSubmit={handleSubmit} >
+        <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            height="50vh"
+            sx={{ backgroundColor: '#f5f5f5', padding: 2 }}
+        >
+            <Typography variant="h4" gutterBottom>
+                Iniciar Sesión
+            </Typography>
+            <form onSubmit={handleSubmit} style={{ width: '300px' }}>
                 <TextField
-                    margin="normal"
-                    required
-                    fullWidth
-                    label="Nombre de Usuario"
+                    label="User Name"
                     value={userName}
                     onChange={(e) => setUserName(e.target.value)}
-                />
-                <TextField
-                    margin="normal"
                     required
                     fullWidth
-                    label="Contraseña"
+                    margin="normal"
+                />
+                <TextField
+                    label="Password"
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
+                    required
+                    fullWidth
+                    margin="normal"
                 />
-                {error && <Typography color="error">{error}</Typography>}
+                {error && (
+                    <Typography color="error" variant="body2" style={{ marginTop: 16 }}>
+                        {error}
+                    </Typography>
+                )}
                 <Button
                     type="submit"
-                    fullWidth
                     variant="contained"
                     color="primary"
-                    disabled={loading}>
-                    {loading ? 'Cargando...' : 'Iniciar Sesión'}
+                    fullWidth
+                    disabled={loading}
+                    sx={{ marginTop: 2 }}
+                >
+                    {loading ? <CircularProgress size={24} color="inherit" /> : 'Login'}
                 </Button>
-                {errorMessage && <div style={{ color: 'red' }}>{errorMessage}</div>}
             </form>
-        </Container>
+        </Box>
     );
 };
 

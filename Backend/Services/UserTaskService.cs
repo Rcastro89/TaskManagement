@@ -5,25 +5,37 @@ namespace TaskManagementAPI.Services
 {
     public class UserTaskService : IUserTaskService
     {
-        private readonly IGenericRepository<UsuarioTarea> _userTaskRepository;
+        private readonly IGenericRepository<VUsuarioTarea> _userTaskRepository;
+        private readonly IGenericRepository<UsuarioTarea> _userTaskCrudRepository;
         private readonly IGenericRepository<Tarea> _taskRepository;
         private readonly IGenericRepository<Usuario> _userRepository;
         public const int EmpleadoRoleId = 3;
-        public UserTaskService(IGenericRepository<UsuarioTarea> userTaskRepository, 
+
+        public UserTaskService(IGenericRepository<VUsuarioTarea> userTaskRepository,
+                               IGenericRepository<UsuarioTarea> userTaskCrudRepository,
                                IGenericRepository<Tarea> taskRepository, 
                                IGenericRepository<Usuario> userRepository)
         {
             _userTaskRepository = userTaskRepository;
+            _userTaskCrudRepository = userTaskCrudRepository;
             _taskRepository = taskRepository;
             _userRepository = userRepository;
         }
 
-        public async Task<IEnumerable<UsuarioTarea>> GetAllUserTasksAsync()
+        public async Task<IEnumerable<VUsuarioTarea>> GetAllUserTasksAsync(int idUser)
         {
-            return await _userTaskRepository.GetAllAsync();
+            var lUserTasks = await _userTaskRepository.GetAllAsync();
+            var userRole = await _userRepository.GetByIdAsync(idUser);
+
+            if (userRole.IdRole == EmpleadoRoleId)
+            {
+                lUserTasks = lUserTasks.Where(x => x.IdUser == idUser).ToList();
+            }
+
+            return lUserTasks;
         }
 
-        public async Task<UsuarioTarea> GetUserTaskByIdAsync(int id)
+        public async Task<VUsuarioTarea> GetUserTaskByIdAsync(int id)
         {
             return await _userTaskRepository.GetByIdAsync(id);
         }
@@ -45,13 +57,13 @@ namespace TaskManagementAPI.Services
                 Status = assignment.Status
             };
 
-            await _userTaskRepository.AddAsync(userTask);
+            await _userTaskCrudRepository.AddAsync(userTask);
         }
 
         public async Task UpdateUserTaskStatusAsync(UpdateUserTaskStatusDto updateUserTaskStatus, int idUser)
         {
             var userRole = await _userRepository.GetByIdAsync(idUser);
-            var userTask = await _userTaskRepository.GetByIdAsync(updateUserTaskStatus.IdUserTask);
+            var userTask = await _userTaskCrudRepository.GetByIdAsync(updateUserTaskStatus.IdUserTask);
 
             if (userTask == null)
             {
@@ -68,7 +80,7 @@ namespace TaskManagementAPI.Services
 
             userTask.Status = updateUserTaskStatus.Status;
 
-            await _userTaskRepository.UpdateAsync(userTask);
+            await _userTaskCrudRepository.UpdateAsync(userTask);
         }
     }
 }

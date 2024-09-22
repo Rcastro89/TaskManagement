@@ -19,16 +19,11 @@ namespace TaskManagementAPI.Controllers
 
         // GET: api/UserTask
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Tarea>>> GetAllUserTasks(int? idUser)
+        public async Task<ActionResult<IEnumerable<Tarea>>> GetAllUserTasks()
         {
             try
             {
-                var userTasks = await _userTaskService.GetAllUserTasksAsync();
-                
-                if (idUser.HasValue)
-                {
-                    userTasks = userTasks.Where(x => x.IdUser == idUser.Value);
-                }
+                var userTasks = await _userTaskService.GetAllUserTasksAsync(int.Parse(User.FindFirst("id")?.Value));
                 
                 return Ok(userTasks);
             }

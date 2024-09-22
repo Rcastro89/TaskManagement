@@ -4,8 +4,9 @@ import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { AuthContext } from '../context/AuthContext';
 
 const Header = () => {
-    const { user, logout } = useContext(AuthContext);
+    const { logout } = useContext(AuthContext);
     const navigate = useNavigate();
+    const user = localStorage.getItem('user');
 
     const handleLogout = () => {
         logout();
@@ -21,7 +22,7 @@ const Header = () => {
                 {user && (
                     <>
                         <Typography variant="body1" style={{ marginRight: '16px' }}>
-                            {user.userName} 
+                            {user} 
                         </Typography>
                         <Button color="inherit" onClick={handleLogout}>
                             Salir

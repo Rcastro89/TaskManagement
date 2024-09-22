@@ -23,7 +23,10 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<UsuarioTarea> UsuarioTareas { get; set; }
 
+    public virtual DbSet<VUsuarioTarea> VUsuarioTareas { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=tcp:rcastro.database.windows.net,1433;Initial Catalog=TaskManagementDB;Persist Security Info=False;User ID=rcastroAdmin;Password=P4#sNz8@Wq!1Tf6;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -77,6 +80,22 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.IdUser)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UsuarioTareas_Usuarios");
+        });
+
+        modelBuilder.Entity<VUsuarioTarea>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vUsuarioTareas");
+
+            entity.Property(e => e.IdTask).HasColumnName("idTask");
+            entity.Property(e => e.IdUser).HasColumnName("idUser");
+            entity.Property(e => e.IdUserTask).HasColumnName("idUserTask");
+            entity.Property(e => e.Status)
+                .HasMaxLength(10)
+                .IsFixedLength();
+            entity.Property(e => e.Title).HasMaxLength(200);
+            entity.Property(e => e.UserName).HasMaxLength(100);
         });
 
         OnModelCreatingPartial(modelBuilder);
