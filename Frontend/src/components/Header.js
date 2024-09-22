@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { AuthContext } from '../context/AuthContext';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 
 const Header = () => {
     const { logout } = useContext(AuthContext);
@@ -24,7 +25,7 @@ const Header = () => {
                         <Typography variant="body1" style={{ marginRight: '16px' }}>
                             {user} 
                         </Typography>
-                        <Button color="inherit" onClick={handleLogout}>
+                        <Button color="inherit" onClick={handleLogout} startIcon={<ExitToAppIcon />}>
                             Salir
                         </Button>
                     </>

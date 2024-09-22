@@ -30,7 +30,11 @@ export const AuthProvider = ({ children }) => {
             localStorage.setItem('token', responseToken);
             localStorage.setItem('user', userName);
         } catch (err) {
-            setError('Error:', err);
+            if (err.response && err.response.status === 401) {
+                setError(err.response.data.error);
+            } else {
+                setError('Error en el login');
+            }
         }
     };
 

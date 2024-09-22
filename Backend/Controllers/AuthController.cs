@@ -22,7 +22,7 @@ namespace TaskManagementAPI.Controllers
             var token = await _userService.Authenticate(login);
             if (token.StartsWith("Error:"))
             {
-                return Unauthorized(token);
+                return Unauthorized(new { error = token });
             }
 
             return Ok(new { Token = token });
