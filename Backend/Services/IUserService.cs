@@ -5,8 +5,8 @@ using TaskManagementAPI.Models;
 
 public interface IUserService
 {
-    Task<IEnumerable<Usuario>> GetAllUsersAsync();
-    Task<Usuario> GetUserByIdAsync(int id);
+    Task<IEnumerable<VUsuario>> GetAllUsersAsync();
+    Task<VUsuario> GetUserByIdAsync(int id);
     Task AddUserAsync(UserDto userDto);
     Task UpdateUserAsync(UserDto userDto);
     Task DeleteUserAsync(int id);

@@ -11,25 +11,31 @@ using TaskManagementAPI.Services;
 
 public class UserService : IUserService
 {
-    private readonly IGenericRepository<Usuario> _userRepository;
+    private readonly IGenericRepository<VUsuario> _userRepository;
+    private readonly IGenericRepository<Usuario> _userCrudRepository;
     private readonly IGenericRepository<Role> _roleRepository;
     private readonly IConfiguration _configuration;
     private readonly PasswordService _passwordServices;
 
-    public UserService(IGenericRepository<Usuario> userRepository, IConfiguration configuration, PasswordService passwordServices, IGenericRepository<Role> roleRepository)
+    public UserService(IGenericRepository<VUsuario> userRepository,
+                       IGenericRepository<Usuario> userCrudRepository,
+                       IConfiguration configuration, 
+                       PasswordService passwordServices, 
+                       IGenericRepository<Role> roleRepository)
     {
         _userRepository = userRepository;
+        _userCrudRepository = userCrudRepository;
         _configuration = configuration;
         _passwordServices = passwordServices;
         _roleRepository = roleRepository;
     }
 
-    public async Task<IEnumerable<Usuario>> GetAllUsersAsync()
+    public async Task<IEnumerable<VUsuario>> GetAllUsersAsync()
     {
         return await _userRepository.GetAllAsync();
     }
 
-    public async Task<Usuario> GetUserByIdAsync(int id)
+    public async Task<VUsuario> GetUserByIdAsync(int id)
     {
         return await _userRepository.GetByIdAsync(id);
     }
@@ -45,14 +51,14 @@ public class UserService : IUserService
             IdRole = userDto.IdRole
         };
 
-        await _userRepository.AddAsync(user);
+        await _userCrudRepository.AddAsync(user);
     }
 
     public async Task UpdateUserAsync(UserDto userDto)
     {
         await ValidateNameAndRoleAsync(userDto);
 
-        var existingUser = await _userRepository.GetByIdAsync(userDto.IdUser.Value);
+        var existingUser = await _userCrudRepository.GetByIdAsync(userDto.IdUser.Value);
 
         if (existingUser == null)
         {
@@ -62,17 +68,17 @@ public class UserService : IUserService
         existingUser.UserName = userDto.UserName;
         existingUser.IdRole = userDto.IdRole;
 
-        await _userRepository.UpdateAsync(existingUser);
+        await _userCrudRepository.UpdateAsync(existingUser);
     }
 
     public async Task DeleteUserAsync(int id)
     {
-        await _userRepository.DeleteAsync(id);
+        await _userCrudRepository.DeleteAsync(id);
     }
 
     public async Task UpdateUserPasswordAsync(int id, string newPassword)
     {
-        var user = await _userRepository.GetByIdAsync(id);
+        var user = await _userCrudRepository.GetByIdAsync(id);
 
         if (user == null)
         {
@@ -81,13 +87,13 @@ public class UserService : IUserService
 
         user.PasswordHash = _passwordServices.HashPassword(newPassword);
 
-        await _userRepository.UpdateAsync(user);
+        await _userCrudRepository.UpdateAsync(user);
     }
 
     public async Task<string> Authenticate(LoginDto login)
     {
         SecurityToken? token = null;
-        var users = await _userRepository.GetAllAsync();
+        var users = await _userCrudRepository.GetAllAsync();
 
         var user = users.FirstOrDefault(u => u.UserName == login.Username);
 
@@ -140,7 +146,7 @@ public class UserService : IUserService
             throw new Exception("Rol inválido");
         }
 
-        var existingUsers = await _userRepository.GetAllAsync();
+        var existingUsers = await _userCrudRepository.GetAllAsync();
 
         if (!userDto.IdUser.HasValue)
         {

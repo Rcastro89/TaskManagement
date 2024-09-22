@@ -23,6 +23,8 @@ public partial class ApplicationDbContext : DbContext
 
     public virtual DbSet<UsuarioTarea> UsuarioTareas { get; set; }
 
+    public virtual DbSet<VUsuario> VUsuarios { get; set; }
+
     public virtual DbSet<VUsuarioTarea> VUsuarioTareas { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -80,6 +82,17 @@ public partial class ApplicationDbContext : DbContext
                 .HasForeignKey(d => d.IdUser)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_UsuarioTareas_Usuarios");
+        });
+
+        modelBuilder.Entity<VUsuario>(entity =>
+        {
+            entity
+                .HasNoKey()
+                .ToView("vUsuarios");
+
+            entity.Property(e => e.IdRole).HasColumnName("idRole");
+            entity.Property(e => e.RoleName).HasMaxLength(100);
+            entity.Property(e => e.UserName).HasMaxLength(100);
         });
 
         modelBuilder.Entity<VUsuarioTarea>(entity =>

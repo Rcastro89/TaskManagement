@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, Button } from '@mui/material';
 import { AuthContext } from '../context/AuthContext';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
@@ -22,8 +22,14 @@ const Header = () => {
                 </Typography>
                 {user && (
                     <>
-                        <Typography variant="body1" style={{ marginRight: '16px' }}>
-                            {user} 
+                        <Button component={Link} to="/UserTasks" color="inherit">
+                            Tareas de Usuarios
+                        </Button>
+                        <Button component={Link} to="/Users" color="inherit">
+                            Usuarios
+                        </Button>
+                        <Typography variant="body1" style={{ marginRight: '16px', marginLeft: '50px' }}>
+                            {user}
                         </Typography>
                         <Button color="inherit" onClick={handleLogout} startIcon={<ExitToAppIcon />}>
                             Salir

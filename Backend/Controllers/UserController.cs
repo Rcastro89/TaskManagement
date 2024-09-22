@@ -22,7 +22,7 @@ namespace TaskManagementAPI.Controllers
 
         // GET: api/User
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Usuario>>> GetAllUsers()
+        public async Task<ActionResult<IEnumerable<VUsuario>>> GetAllUsers()
         {
             var users = await _userService.GetAllUsersAsync();
             return Ok(users);
@@ -30,7 +30,7 @@ namespace TaskManagementAPI.Controllers
 
         // GET: api/User/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Usuario>> GetUserById(int id)
+        public async Task<ActionResult<VUsuario>> GetUserById(int id)
         {
             var user = await _userService.GetUserByIdAsync(id);
             if (user == null)
