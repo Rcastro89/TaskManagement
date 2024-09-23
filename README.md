@@ -167,20 +167,23 @@ Se utilizó **Entity Framework Core** con el enfoque **Database First** para gen
 ## **Decisiones Técnicas y Consideraciones Especiales**
 
 1. **Database First**: 
-   - Decidimos utilizar el enfoque **Database First** para permitir que el equipo de desarrollo trabaje directamente con un esquema de base de datos existente, y asegurarnos de que cualquier cambio en la base de datos se refleje en el modelo de la aplicación.
+   - Decidí utilizar el enfoque **Database First** para permitir que el equipo de desarrollo trabaje directamente con un esquema de base de datos existente, y asegurarnos de que cualquier cambio en la base de datos se refleje en el modelo de la aplicación.
 
 2. **JWT para Seguridad**:
    - La autenticación mediante **JWT** garantiza que las solicitudes sean seguras y que los usuarios solo puedan acceder a recursos permitidos según su rol.
 
 3. **Context API**: 
-   - En el frontend, optamos por **Context API** para manejar el estado global de la aplicación en lugar de soluciones más complejas como Redux, dado que el tamaño del proyecto no requiere una gestión de estado tan sofisticada.
+   - En el frontend, opté por **Context API** para manejar el estado global de la aplicación en lugar de soluciones más complejas como Redux, dado que el tamaño del proyecto no requiere una gestión de estado tan sofisticada.
 
 4. **Axios Interceptors**:
-   - Implementamos **interceptores de Axios** en el frontend para agregar automáticamente el token JWT a todas las solicitudes, simplificando el código y mejorando la seguridad.
+   - Implementé **interceptores de Axios** en el frontend para agregar automáticamente el token JWT a todas las solicitudes, simplificando el código y mejorando la seguridad.
 
 5. **Protección de Rutas**:
-   - Para garantizar que solo los usuarios autenticados y autorizados puedan acceder a ciertas páginas, implementamos componentes como `PrivateRoute` y `AdminRoute` en React.
-
+   - Para garantizar que solo los usuarios autenticados y autorizados puedan acceder a ciertas páginas, implementé componentes como `PrivateRoute` y `AdminRoute` en React.
+  
+6. **Servicios Azure**
+   - Aprovechando los recursos disponibles en la nube de Azure, utilicé los servicios **SQL Server, App Services, KeyVault**
+     
 ---
 
 ## **Conclusión**
