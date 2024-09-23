@@ -22,9 +22,6 @@ export const CreateUserProvider = ({ children }) => {
             if (err.response && err.response.status === 403) {
                 throw new Error('No tiene permisos suficientes para realizar esta acción, comuníquese con su administrador');
             } else {
-                console.log(err.response);
-                console.log(err);
-
                 throw new Error(err.response.data);
             }
         }

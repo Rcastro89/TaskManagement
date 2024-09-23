@@ -28,6 +28,9 @@ const Header = () => {
                         <Button component={Link} to="/Users" color="inherit">
                             Usuarios
                         </Button>
+                        <Button component={Link} to="/Task" color="inherit">
+                            Tareas
+                        </Button>
                         <Typography variant="body1" style={{ marginRight: '16px', marginLeft: '50px' }}>
                             {user}
                         </Typography>
