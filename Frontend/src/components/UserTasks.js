@@ -1,11 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { UserTaskContext } from '../context/UserTaskContext';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Button, Box, MenuItem, TextField } from '@mui/material';
-import { Add, Edit, Save, Close } from '@mui/icons-material';
+import { Add, Edit, Save, Close, Delete } from '@mui/icons-material';
 import CreateUserTask from './CreateUserTask';
 
 const UserTasks = () => {
-    const { userTasks, loading, error, fetchTasks, updateUserTaskStatus } = useContext(UserTaskContext);
+    const { userTasks, loading, error, fetchTasks, updateUserTaskStatus, fetchDeleteUserTask } = useContext(UserTaskContext);
     const [open, setOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const [newStatus, setNewStatus] = useState('');
@@ -46,6 +46,16 @@ const UserTasks = () => {
     const handleCancel = () => {
         setEditingTask(null); 
         setNewStatus("");
+    };
+
+    const handleDelete = async (user) => {
+        try {
+            await fetchDeleteUserTask(user);
+            fetchTasks();
+        }
+        catch (err) {
+            alert('Error eliminando la tarea del usuario: ' + err);
+        }
     };
 
     useEffect(() => {
@@ -126,13 +136,22 @@ const UserTasks = () => {
                                             </Button>
                                         </Box>
                                     ) : (
-                                        <Button
-                                            onClick={() => handleEdit(userTask)}
-                                            color="secondary"
-                                            startIcon={<Edit />}
-                                        >
-                                            Editar
-                                        </Button>
+                                        <Box>
+                                            <Button
+                                                onClick={() => handleEdit(userTask)}
+                                                color="secondary"
+                                                startIcon={<Edit />}
+                                            >
+                                                Editar
+                                            </Button>
+                                            <Button
+                                                onClick={() => handleDelete(userTask)}
+                                                color="secondary"
+                                                startIcon={<Delete />}
+                                            >
+                                                Eliminar
+                                            </Button>
+                                        </Box>
                                     )}
                                 </TableCell>
                             </TableRow>

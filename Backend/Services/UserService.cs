@@ -13,18 +13,21 @@ public class UserService : IUserService
 {
     private readonly IGenericRepository<VUsuario> _userRepository;
     private readonly IGenericRepository<Usuario> _userCrudRepository;
+    private readonly IUserTaskService _userTaskRepository;
     private readonly IGenericRepository<Role> _roleRepository;
     private readonly IConfiguration _configuration;
     private readonly PasswordService _passwordServices;
 
     public UserService(IGenericRepository<VUsuario> userRepository,
                        IGenericRepository<Usuario> userCrudRepository,
+                       IUserTaskService userTaskRepository,
                        IConfiguration configuration, 
                        PasswordService passwordServices, 
                        IGenericRepository<Role> roleRepository)
     {
         _userRepository = userRepository;
         _userCrudRepository = userCrudRepository;
+        _userTaskRepository = userTaskRepository;
         _configuration = configuration;
         _passwordServices = passwordServices;
         _roleRepository = roleRepository;
@@ -73,6 +76,13 @@ public class UserService : IUserService
 
     public async Task DeleteUserAsync(int id)
     {
+        var lUserTask = await _userTaskRepository.GetUserTaskByIdUserAsync(id);
+        
+        foreach (var userTask in lUserTask) 
+        {
+            await _userTaskRepository.DeleteUserTaskAsync(userTask.IdUserTask);
+        }
+
         await _userCrudRepository.DeleteAsync(id);
     }
 

@@ -49,7 +49,6 @@ namespace TaskManagementAPI.Controllers
         }
 
         [HttpPost("updateStatus")]
-        [Authorize(Roles = "Administrador, Supervisor, Empleado")]
         public async Task<ActionResult> UpdateUserTaskStatus([FromBody] UpdateUserTaskStatusDto updateUserTaskStatus)
         {
             try
@@ -61,6 +60,15 @@ namespace TaskManagementAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        // DELETE: api/User/5
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrador, Supervisor")]
+        public async Task<IActionResult> DeleteUserTask(int id)
+        {
+            await _userTaskService.DeleteUserTaskAsync(id);
+            return Ok("Tarea del usuario eliminada con éxito");
         }
     }
 }

@@ -20,9 +20,33 @@ export const UserProvider = ({ children }) => {
         }
     };
 
+    const fetchUpdateUser = async (updateUser) => {
+        try {
+            const response = await api.put(`/User/${updateUser.IdUser}`, updateUser);
+        } catch (err) {
+            if (err.response && err.response.status === 403) {
+                throw new Error('No tiene permisos suficientes para realizar esta acción, comuníquese con su administrador');
+            } else {
+                throw new Error('Error al asignar la tarea: ' + err.response.data);
+            }
+        }
+    };
+
+    const fetchDeleteUser = async (deleteUser) => {
+        try {
+            const response = await api.delete(`/User/${deleteUser.idUser}`);
+        } catch (err) {
+            if (err.response && err.response.status === 403) {
+                throw new Error('No tiene permisos suficientes para realizar esta acción, comuníquese con su administrador');
+            } else {
+                throw new Error('Error al asignar la tarea: ' + err.response.data);
+            }
+        }
+    }
+
 
     return (
-        <UserContext.Provider value={{ users, loading, error, fetchUsers }}>
+        <UserContext.Provider value={{ users, loading, error, fetchUsers, fetchUpdateUser, fetchDeleteUser }}>
             {children}
         </UserContext.Provider>
     );

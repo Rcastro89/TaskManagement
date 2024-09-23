@@ -58,6 +58,7 @@ namespace TaskManagementAPI.Controllers
 
         // PUT: api/User/5
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrador")]
         public async Task<IActionResult> UpdateUser(int id, [FromBody] UserDto updatedUser)
         {
             if (id != updatedUser.IdUser)

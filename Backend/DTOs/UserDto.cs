@@ -6,7 +6,7 @@
 
         public required string UserName { get; set; }
 
-        public required string PasswordHash { get; set; }
+        public string? PasswordHash { get; set; }
 
         public int IdRole { get; set; }
     }

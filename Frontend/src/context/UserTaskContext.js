@@ -30,9 +30,21 @@ export const UserTaskProvider = ({ children }) => {
         }
     };
 
+    const fetchDeleteUserTask = async (deleteUserTask) => {
+        try {
+            const response = await api.delete(`/UserTask/${deleteUserTask.idUserTask}`);
+        } catch (err) {
+            if (err.response && err.response.status === 403) {
+                throw new Error('No tiene permisos suficientes para realizar esta acción, comuníquese con su administrador');
+            } else {
+                throw new Error('Error al asignar la tarea: ' + err.response.data);
+            }
+        }
+    }
+
 
     return (
-        <UserTaskContext.Provider value={{ userTasks, loading, error, fetchTasks, updateUserTaskStatus }}>
+        <UserTaskContext.Provider value={{ userTasks, loading, error, fetchTasks, updateUserTaskStatus, fetchDeleteUserTask }}>
             {children}
         </UserTaskContext.Provider>
     );

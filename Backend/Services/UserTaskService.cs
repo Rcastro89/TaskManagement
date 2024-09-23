@@ -40,6 +40,13 @@ namespace TaskManagementAPI.Services
             return await _userTaskRepository.GetByIdAsync(id);
         }
 
+        public async Task<IEnumerable<UsuarioTarea>> GetUserTaskByIdUserAsync(int idUser)
+        {
+            var lUserTask = await _userTaskCrudRepository.GetAllAsync();
+            return lUserTask.Where(x => x.IdUser == idUser);
+             
+        }
+
         public async Task CreateUserTaskAsync(UserTaskAssignmentDto assignment)
         {
             var user = await _userRepository.GetByIdAsync(assignment.IdUser);
@@ -81,6 +88,11 @@ namespace TaskManagementAPI.Services
             userTask.Status = updateUserTaskStatus.Status;
 
             await _userTaskCrudRepository.UpdateAsync(userTask);
+        }
+
+        public async Task DeleteUserTaskAsync(int id)
+        {
+            await _userTaskCrudRepository.DeleteAsync(id);
         }
     }
 }
