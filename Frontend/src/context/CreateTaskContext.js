@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext } from 'react';
 import api from '../services/api';
 
 export const CreateTaskContext = createContext();

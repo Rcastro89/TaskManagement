@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { TaskContext } from '../context/TaskContext';
-import { CreateTaskContext } from '../context/CreateTaskContext';
-import { Autocomplete, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, TextField, CircularProgress, Box, Button } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, TextField, CircularProgress, Box, Button } from '@mui/material';
 import { Add, Save, Edit, Close, Delete } from '@mui/icons-material';
 import CreateTask from './CreateTask';
 

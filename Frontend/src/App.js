@@ -7,7 +7,7 @@ import Footer from './components/Footer';
 import Login from './components/Login';
 import Users from './components/Users';
 import Task from './components/Task';
-import PrivateRoute from './components/PrivateRoute';
+import PrivateRoute from './services/PrivateRoute';
 import UserTasks from './components/UserTasks';
 import Home from './components/Home';
 import AdminRoute from './services/AdminRoute'

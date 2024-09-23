@@ -1,6 +1,5 @@
-import React, { useState, useContext, useEffect } from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, TextField, MenuItem } from '@mui/material';
-import { Autocomplete } from '@mui/lab';
+import React, { useState, useContext } from 'react';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography, TextField } from '@mui/material';
 import { CreateTaskContext } from '../context/CreateTaskContext';
 
 const CreateTask = ({ open, onClose }) => {
