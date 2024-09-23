@@ -2,7 +2,8 @@ import axios from 'axios';
 
 // Crear una instancia de axios para facilitar las solicitudes a la API
 const api = axios.create({
-    baseURL: 'http://localhost:5184/api', // URL base de tu API
+    //baseURL: 'http://localhost:5184/api', // URL base de la API para pruebas locales
+    baseURL: 'https://rcastrotaskmanagement.azurewebsites.net/api' // URL base de la API en Azure app services
 });
 
 // Interceptor para agregar el token en cada solicitud
