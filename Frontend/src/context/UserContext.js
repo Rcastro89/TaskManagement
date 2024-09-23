@@ -22,12 +22,12 @@ export const UserProvider = ({ children }) => {
 
     const fetchUpdateUser = async (updateUser) => {
         try {
-            const response = await api.put(`/User/${updateUser.IdUser}`, updateUser);
+            const response = await api.put(`/User/${updateUser.UserId}`, updateUser);
         } catch (err) {
             if (err.response && err.response.status === 403) {
                 throw new Error('No tiene permisos suficientes para realizar esta acción, comuníquese con su administrador');
             } else {
-                throw new Error('Error al asignar la tarea: ' + err.response.data);
+                throw new Error('Error al actualizar usuario: ' + err.response.data);
             }
         }
     };
@@ -39,7 +39,7 @@ export const UserProvider = ({ children }) => {
             if (err.response && err.response.status === 403) {
                 throw new Error('No tiene permisos suficientes para realizar esta acción, comuníquese con su administrador');
             } else {
-                throw new Error('Error al asignar la tarea: ' + err.response.data);
+                throw new Error('Error al elimiar usuario: ' + err.response.data);
             }
         }
     }

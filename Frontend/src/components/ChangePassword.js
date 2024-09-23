@@ -18,7 +18,7 @@ const ChangePassword = ({ open, onClose, idUser }) => {
 
         try {
             const newPassword = {
-                idUser: idUser,
+                UserId: idUser,
                 NewPassword: password,
             };
 

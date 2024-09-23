@@ -45,25 +45,26 @@ const Users = () => {
     const handleDelete = async (user) => {
         try {
             await fetchDeleteUser(user);
+            fetchUsers();
         }
         catch (err) {
-            alert('Error eliminando al usuario: ' + err);
+            alert(err);
         }
     };
 
     const handleSave = async () => {
         if (editingUser) {
             const updateUser = {
-                IdUser: editingUser.idUser,
+                UserId: editingUser.idUser,
                 UserName: newUserName,
-                IdRole: parseInt(newRole, 10)
+                RoleId: parseInt(newRole, 10)
             }
 
             try {
                 await fetchUpdateUser(updateUser);
             }
             catch (err) {
-                alert('Error al actualizar el usuario: ' + err);
+                alert(err);
             }
 
             setEditingUser(null);

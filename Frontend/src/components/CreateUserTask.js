@@ -14,8 +14,8 @@ const CreateUserTask = ({ open, onClose }) => {
         e.preventDefault();
         try {
             const assignment = {
-                IdUser: selectedUser?.idUser,
-                IdTask: selectedTask?.idTask,
+                UserId: selectedUser?.idUser,
+                TaskId: selectedTask?.idTask,
                 Status: status,
             };
             await createUserTask(assignment);
@@ -36,7 +36,7 @@ const CreateUserTask = ({ open, onClose }) => {
                     getOptionLabel={(option) => option.title}
                     onChange={(event, newValue) => setSelectedTask(newValue)}
                     renderInput={(params) => <TextField {...params} label="Tarea" variant="outlined" />}
-                    style={{ marginBottom: '16px' }}
+                    style={{ marginBottom: '16px', marginTop: '20px' }}
                 />
                 <Autocomplete
                     options={users}

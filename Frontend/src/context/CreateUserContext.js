@@ -19,10 +19,16 @@ export const CreateUserProvider = ({ children }) => {
         try {
             await api.post('/User', newUser);
         } catch (err) {
-            if (err.response && err.response.status === 403) {
-                throw new Error('No tiene permisos suficientes para realizar esta acción, comuníquese con su administrador');
+            if (err.response) {
+                if (err.response.status === 403) {
+                    throw new Error('No tiene permisos suficientes para realizar esta acción, comuníquese con su administrador');
+                } else if (err.response.status === 400) {
+                    throw new Error(err.response.data || 'Error al crear usuario: Datos inválidos');
+                } else {
+                    throw new Error(`Error inesperado: ${err.response.status} ${err.response.statusText}`);
+                }
             } else {
-                throw new Error(err.response.data);
+                throw new Error('Error de conexión o del servidor');
             }
         }
     };

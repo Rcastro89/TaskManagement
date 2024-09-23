@@ -29,7 +29,7 @@ const UserTasks = () => {
     const handleSave = async () => {
         if (editingTask) {
             const updateTask = {
-                IdUserTask: editingTask.idUserTask,
+                UserTaskId: editingTask.idUserTask,
                 Status: newStatus
             }
 

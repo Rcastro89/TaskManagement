@@ -81,9 +81,9 @@ namespace TaskManagementAPI.Controllers
                 await _userService.AddUserAsync(newUser);
                 return Ok("Usuario creado con éxito"); // Devuelve mensaje de éxito
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return BadRequest("Error al crear el usuario."); // Mensaje genérico en caso de error
+                return BadRequest("Error al crear el usuario: " + ex.Message); // Mensaje genérico en caso de error
             }
         }
 

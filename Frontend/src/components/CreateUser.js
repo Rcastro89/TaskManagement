@@ -20,13 +20,13 @@ const CreateUser = ({ open, onClose }) => {
         try {
             const newUser = {
                 UserName: userName,
-                idRole: idRole?.idRole,
+                RoleId: idRole?.idRole,
                 PasswordHash: passwordHash,
             };
             await fetchCreateUser(newUser);
             onClose();
         } catch (err) {
-            setErrorMessage('Error al crear usuario: ' + err.message);
+            setErrorMessage(err.message);
         }
     };
 
