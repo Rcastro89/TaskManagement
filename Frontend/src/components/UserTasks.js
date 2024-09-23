@@ -4,70 +4,88 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typog
 import { Add, Edit, Save, Close, Delete } from '@mui/icons-material';
 import CreateUserTask from './CreateUserTask';
 
+/**
+ * Componente que maneja la visualización y gestión de tareas asignadas a los usuarios.
+ * Permite asignar nuevas tareas, editar el estado de tareas existentes y eliminarlas.
+ */
 const UserTasks = () => {
+    // Contexto para las tareas de usuario
     const { userTasks, loading, error, fetchTasks, updateUserTaskStatus, fetchDeleteUserTask } = useContext(UserTaskContext);
+
+    // Estado para controlar la apertura del modal y la tarea que se está editando
     const [open, setOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const [newStatus, setNewStatus] = useState('');
+
+    // Obtener el rol del usuario actual almacenado en localStorage
     const role = localStorage.getItem('role');
 
+    // Estilo para los encabezados de la tabla
     const headerStyle = (width) => {
-        return { fontWeight: 'bold', width: width }
+        return { fontWeight: 'bold', width: width };
     };
 
+    // Maneja la apertura del modal para asignar una nueva tarea
     const handleOpen = () => setOpen(true);
+
+    // Maneja el cierre del modal y la recarga de tareas
     const handleClose = () => {
         setOpen(false);
         fetchTasks();
     };
 
+    // Maneja la edición de una tarea existente
     const handleEdit = (task) => {
         setEditingTask(task);
         setNewStatus(task.status);
     };
 
+    // Maneja la acción de guardar cambios en la tarea editada
     const handleSave = async () => {
         if (editingTask) {
             const updateTask = {
                 UserTaskId: editingTask.idUserTask,
                 Status: newStatus
-            }
+            };
 
             try {
                 await updateUserTaskStatus(updateTask);
-            }
-            catch (err) {
+            } catch (err) {
                 alert('Error al actualizar el estatus: ' + err);
             }
 
-            setEditingTask(null); 
-            fetchTasks(); 
+            setEditingTask(null);
+            fetchTasks();
         }
     };
 
+    // Cancela la edición de la tarea
     const handleCancel = () => {
-        setEditingTask(null); 
+        setEditingTask(null);
         setNewStatus("");
     };
 
-    const handleDelete = async (user) => {
+    // Maneja la eliminación de una tarea
+    const handleDelete = async (userTask) => {
         try {
-            await fetchDeleteUserTask(user);
+            await fetchDeleteUserTask(userTask);
             fetchTasks();
-        }
-        catch (err) {
+        } catch (err) {
             alert('Error eliminando la tarea del usuario: ' + err);
         }
     };
 
+    // Efecto para cargar tareas al montar el componente
     useEffect(() => {
         fetchTasks();
     }, []);
 
+    // Muestra un indicador de carga mientras se obtienen las tareas
     if (loading) {
         return <CircularProgress />;
     }
 
+    // Muestra un mensaje de error si ocurre un error al obtener las tareas
     if (error) {
         return <Typography color="error">{error}</Typography>;
     }
@@ -139,7 +157,7 @@ const UserTasks = () => {
                                                 Guardar
                                             </Button>
                                             <Button
-                                                onClick={() => handleCancel()}
+                                                onClick={handleCancel}
                                                 color="secondary"
                                                 startIcon={<Close />}
                                                 sx={{ marginLeft: 1 }} // Espacio entre botones
@@ -156,7 +174,7 @@ const UserTasks = () => {
                                             >
                                                 Editar
                                             </Button>
-                                                <Tooltip title={role === 'Administrador' || role === 'Supervisor' ? '' : 'Sin permisos suficientes'}>
+                                            <Tooltip title={role === 'Administrador' || role === 'Supervisor' ? '' : 'Sin permisos suficientes'}>
                                                 <span>
                                                     <Button
                                                         onClick={() => handleDelete(userTask)}
