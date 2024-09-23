@@ -85,7 +85,7 @@ namespace TaskManagementAPI.Controllers
         {
             try
             {
-                await _userService.UpdateUserPasswordAsync(model.UserId, model.NewPassword);
+                await _userService.UpdateUserPasswordAsync(model.idUser, model.NewPassword);
                 return Ok("Password updated successfully");
             }
             catch (Exception ex)

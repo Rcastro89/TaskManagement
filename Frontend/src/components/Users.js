@@ -2,16 +2,19 @@ import React, { useContext, useEffect, useState } from 'react';
 import { UserContext } from '../context/UserContext';
 import { CreateUserContext } from '../context/CreateUserContext';
 import { Autocomplete, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, TextField, CircularProgress, Box, Button } from '@mui/material';
-import { Add, Save, Edit, Close, Delete } from '@mui/icons-material';
+import { Add, Save, Edit, Close, Delete, VpnKey } from '@mui/icons-material';
 import CreateUser from './CreateUser';
+import ChangePassword from './ChangePassword';
 
 const Users = () => {
     const { users, loading, error, fetchUsers, fetchUpdateUser, fetchDeleteUser } = useContext(UserContext);
     const { roles, fetchRoles } = useContext(CreateUserContext);
     const [open, setOpen] = useState(false);
+    const [openPass, setOpenPass] = useState(false);
     const [editingUser, setEditingUser] = useState(null);
     const [newRole, setNewRole] = useState('');
     const [newUserName, setNewUserName] = useState('');
+    const [idUser, setIdUser] = useState('');
 
     const headerStyle = (width) => {
         return { fontWeight: 'bold', width: width }
@@ -66,6 +69,19 @@ const Users = () => {
             setEditingUser(null);
             fetchUsers();
         }
+    };
+
+    const handleOpenPass = (idus) => {
+        setIdUser(idus);
+
+        setOpenPass(true);
+    };
+
+    const handleClosePass = () => {
+        setOpenPass(false);
+        setEditingUser(null);
+
+        fetchUsers();
     };
 
     useEffect(() => {
@@ -174,6 +190,13 @@ const Users = () => {
                                                 >
                                                     Eliminar
                                                 </Button>
+                                                <Button
+                                                    onClick={() => handleOpenPass(user.idUser)}
+                                                    color="secondary"
+                                                    startIcon={<VpnKey />}
+                                                >
+                                                    Cambiar contraseña
+                                                </Button>
                                             </Box>
                                     )}
                                 </TableCell>
@@ -183,6 +206,7 @@ const Users = () => {
                 </Table>
             </TableContainer>
             <CreateUser open={open} onClose={handleClose} />
+            <ChangePassword open={openPass} onClose={handleClosePass} idUser={idUser} />
         </Box>
     );
 };

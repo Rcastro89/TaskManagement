@@ -19,6 +19,7 @@ import { UserProvider } from './context/UserContext';
 import { CreateUserProvider } from './context/CreateUserContext';
 import { TaskProvider } from './context/TaskContext';
 import { CreateTaskProvider } from './context/CreateTaskContext';
+import { ChangePasswordProvider } from './context/ChangePasswordContext';
 
 import './App.css';
 
@@ -34,41 +35,43 @@ const App = () => {
                             <CreateUserProvider>
                                 <TaskProvider>
                                     <CreateTaskProvider>
-                                        <Router>
-                                            <div className="app-container">
-                                                <Header />
-                                                <div className="content">
-                                                    <Routes>
-                                                        <Route path="/" element={<LoginOrRedirect />} />
-                                                        <Route path="/Home" element={
-                                                            <PrivateRoute>
-                                                                <Home />
-                                                            </PrivateRoute>
-                                                        } />
-                                                        <Route path="/UserTasks" element={
-                                                            <PrivateRoute>
-                                                                <UserTasks />
-                                                            </PrivateRoute>
-                                                        } />
-                                                        <Route path="/Users" element={
-                                                            <PrivateRoute>
-                                                                <AdminRoute>
-                                                                    <Users />
-                                                                </AdminRoute>
-                                                            </PrivateRoute>
-                                                        } />
-                                                        <Route path="/Task" element={
-                                                            <PrivateRoute>
-                                                                <AdminRoute>
-                                                                    <Task />
-                                                                </AdminRoute>
-                                                            </PrivateRoute>
-                                                        } />
-                                                    </Routes>
+                                        <ChangePasswordProvider>
+                                            <Router>
+                                                <div className="app-container">
+                                                    <Header />
+                                                    <div className="content">
+                                                        <Routes>
+                                                            <Route path="/" element={<LoginOrRedirect />} />
+                                                            <Route path="/Home" element={
+                                                                <PrivateRoute>
+                                                                    <Home />
+                                                                </PrivateRoute>
+                                                            } />
+                                                            <Route path="/UserTasks" element={
+                                                                <PrivateRoute>
+                                                                    <UserTasks />
+                                                                </PrivateRoute>
+                                                            } />
+                                                            <Route path="/Users" element={
+                                                                <PrivateRoute>
+                                                                    <AdminRoute>
+                                                                        <Users />
+                                                                    </AdminRoute>
+                                                                </PrivateRoute>
+                                                            } />
+                                                            <Route path="/Task" element={
+                                                                <PrivateRoute>
+                                                                    <AdminRoute>
+                                                                        <Task />
+                                                                    </AdminRoute>
+                                                                </PrivateRoute>
+                                                            } />
+                                                        </Routes>
+                                                    </div>
+                                                    <Footer />
                                                 </div>
-                                                <Footer />
-                                            </div>
-                                        </Router>
+                                            </Router>
+                                        </ChangePasswordProvider>
                                     </CreateTaskProvider>
                                 </TaskProvider>
                             </CreateUserProvider>
