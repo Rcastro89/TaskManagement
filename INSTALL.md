@@ -67,6 +67,8 @@ Ahora si quieres usar la aplicación con el servidor de API local asegura que se
 baseURL: 'http://localhost:5184/api' //cambia 5184 por el puerto que muestre tu aplicación de API local
 ```
 
+**En este último caso deberas contactarme para autorizar tu ip pública en las reglas del firewall de Azure**
+
 ## 2. Ejecución del Frontend
 
 Una vez que todas las dependencias estén instaladas y la URL esté configurada, puedes ejecutar el frontend con el siguiente comando:
