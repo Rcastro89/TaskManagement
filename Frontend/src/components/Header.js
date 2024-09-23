@@ -8,6 +8,7 @@ const Header = () => {
     const { logout } = useContext(AuthContext);
     const navigate = useNavigate();
     const user = localStorage.getItem('user');
+    const role = localStorage.getItem('role');
 
     const handleLogout = () => {
         logout();
@@ -17,7 +18,7 @@ const Header = () => {
     return (
         <AppBar position="static">
             <Toolbar>
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                <Typography variant="h6" component={Link} to="/Home" color="white" sx={{ flexGrow: 1 }}>
                     Task Management
                 </Typography>
                 {user && (
@@ -25,12 +26,16 @@ const Header = () => {
                         <Button component={Link} to="/UserTasks" color="inherit">
                             Tareas de Usuarios
                         </Button>
-                        <Button component={Link} to="/Users" color="inherit">
-                            Usuarios
-                        </Button>
-                        <Button component={Link} to="/Task" color="inherit">
-                            Tareas
-                        </Button>
+                        {role === 'Administrador' && (
+                            <>
+                                <Button component={Link} to="/Users" color="inherit">
+                                    Usuarios
+                                </Button>
+                                <Button component={Link} to="/Task" color="inherit">
+                                    Tareas
+                                </Button>
+                            </>
+                        )}
                         <Typography variant="body1" style={{ marginRight: '16px', marginLeft: '50px' }}>
                             {user}
                         </Typography>

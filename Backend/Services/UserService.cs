@@ -100,8 +100,9 @@ public class UserService : IUserService
         await _userCrudRepository.UpdateAsync(user);
     }
 
-    public async Task<string> Authenticate(LoginDto login)
+    public async Task<AuthResponseDto> Authenticate(LoginDto login)
     {
+        AuthResponseDto result = new AuthResponseDto();
         SecurityToken? token = null;
         var users = await _userCrudRepository.GetAllAsync();
 
@@ -109,14 +110,14 @@ public class UserService : IUserService
 
         if (user == null || !_passwordServices.VerifyPassword(user.PasswordHash, login.Password))
         {
-            return "Error: Usuario o contraseña incorrecta";
+            throw new Exception("Error: Usuario o contraseña incorrecta");
         }
 
         var role = user.IdRole.HasValue ? (await _roleRepository.GetByIdAsync(user.IdRole.Value))?.RoleName : null;
 
         if (role == null)
         {
-            return "Error: El usuario no tiene un rol válido.";
+            throw new Exception("Error: El usuario no tiene un rol válido.");
         }
 
         var tokenHandler = new JwtSecurityTokenHandler();
@@ -142,10 +143,12 @@ public class UserService : IUserService
         }
         catch (Exception ex) 
         {
-            return $"Failure: {ex.Message}";
+            throw new Exception($"Failure: {ex.Message}");
         }
 
-        return tokenHandler.WriteToken(token);
+        result.Token = tokenHandler.WriteToken(token);
+        result.Role = user.IdRoleNavigation.RoleName;
+        return result;
     }
 
     private async Task ValidateNameAndRoleAsync(UserDto userDto)

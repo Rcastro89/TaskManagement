@@ -7,6 +7,7 @@ export const AuthProvider = ({ children }) => {
     const [token, setToken] = useState(null);
     const [user, setUser] = useState(null);
     const [error, setError] = useState(null);
+    const [role, setRole] = useState(null);
 
     // Cargar el token y usuario del localStorage al iniciar
     useEffect(() => {
@@ -22,13 +23,15 @@ export const AuthProvider = ({ children }) => {
         try {
             const response = await api.post('/auth/login', { UserName: userName, Password: password });
             const responseToken = response.data.token;
+            const responseRole = response.data.role;
 
             setToken(responseToken);
             setUser(userName);
+            setRole(responseRole);
 
-            // Guardar el token en localStorage
             localStorage.setItem('token', responseToken);
             localStorage.setItem('user', userName);
+            localStorage.setItem('role', responseRole);
         } catch (err) {
             if (err.response && err.response.status === 401) {
                 setError(err.response.data.error);
@@ -42,6 +45,7 @@ export const AuthProvider = ({ children }) => {
     const logout = () => {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
+        localStorage.removeItem('role');
         setToken(null);
         setUser(null);
     };

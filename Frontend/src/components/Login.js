@@ -15,7 +15,7 @@ const Login = () => {
         setLoading(true);
         try {
             await login(userName, password);
-            navigate('/UserTasks'); // Redirige a la página de tareas después del login
+            navigate('/Home');
         } finally {
             setLoading(false);
         }

@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { UserTaskContext } from '../context/UserTaskContext';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Button, Box, MenuItem, TextField } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Button, Box, MenuItem, TextField, Tooltip } from '@mui/material';
 import { Add, Edit, Save, Close, Delete } from '@mui/icons-material';
 import CreateUserTask from './CreateUserTask';
 
@@ -9,6 +9,8 @@ const UserTasks = () => {
     const [open, setOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const [newStatus, setNewStatus] = useState('');
+    const role = localStorage.getItem('role');
+
     const headerStyle = (width) => {
         return { fontWeight: 'bold', width: width }
     };
@@ -77,9 +79,19 @@ const UserTasks = () => {
             </Typography>
 
             <Box sx={{ display: 'flex', justifyContent: 'flex-start', marginBottom: 2 }}>
-                <Button variant="contained" color="primary" startIcon={<Add />} onClick={handleOpen}>
-                    Asignar Nueva Tarea
-                </Button>
+                <Tooltip title={role === 'Administrador' || role === 'Supervisor' ? '' : 'Sin permisos suficientes'}>
+                    <span>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            startIcon={<Add />}
+                            onClick={handleOpen}
+                            disabled={!(role === 'Administrador' || role === 'Supervisor')}
+                        >
+                            Asignar Nueva Tarea
+                        </Button>
+                    </span>
+                </Tooltip>
             </Box>
 
             <TableContainer>
@@ -144,13 +156,18 @@ const UserTasks = () => {
                                             >
                                                 Editar
                                             </Button>
-                                            <Button
-                                                onClick={() => handleDelete(userTask)}
-                                                color="secondary"
-                                                startIcon={<Delete />}
-                                            >
-                                                Eliminar
-                                            </Button>
+                                                <Tooltip title={role === 'Administrador' || role === 'Supervisor' ? '' : 'Sin permisos suficientes'}>
+                                                <span>
+                                                    <Button
+                                                        onClick={() => handleDelete(userTask)}
+                                                        color="secondary"
+                                                        startIcon={<Delete />}
+                                                        disabled={!(role === 'Administrador' || role === 'Supervisor')}
+                                                    >
+                                                        Eliminar
+                                                    </Button>
+                                                </span>
+                                            </Tooltip>
                                         </Box>
                                     )}
                                 </TableCell>

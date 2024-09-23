@@ -19,13 +19,16 @@ namespace TaskManagementAPI.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginDto login)
         {
-            var token = await _userService.Authenticate(login);
-            if (token.StartsWith("Error:"))
+            try
             {
-                return Unauthorized(new { error = token });
+                AuthResponseDto result = await _userService.Authenticate(login);
+                return Ok(new { Token = result.Token, Role = result.Role });
+            }
+            catch (Exception ex) 
+            {
+                return Unauthorized(new { error = ex.Message });
             }
 
-            return Ok(new { Token = token });
         }
     }
 }
